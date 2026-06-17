@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { PUBLIC_API_URL } from '$env/static/public';
 
 	let loading = $state(false);
 	let file = $state<File | null>(null);
@@ -49,7 +48,7 @@
 
 		try {
 			// Step 1: get presigned PUT URL from Lambda
-			const presignRes = await fetch(`${PUBLIC_API_URL}/presign`, {
+			const presignRes = await fetch('/presign', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ filename: file.name, contentType: file.type })
@@ -66,7 +65,7 @@
 			if (!s3Res.ok) throw new Error(`S3 upload failed (${s3Res.status})`);
 
 			// Step 3: save metadata to DB via Lambda
-			const saveRes = await fetch(`${PUBLIC_API_URL}/images`, {
+			const saveRes = await fetch('/images', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ title, key })

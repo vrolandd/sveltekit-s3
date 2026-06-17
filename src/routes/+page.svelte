@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import GalleryImage from '../components/GalleryImage.svelte';
-	import { PUBLIC_API_URL } from '$env/static/public';
 
 	type GalleryItem = { id: number; title: string; s3_url: string };
 
@@ -11,7 +10,7 @@
 
 	onMount(async () => {
 		try {
-			const res = await fetch(`${PUBLIC_API_URL}/images`);
+			const res = await fetch('/images');
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			gallery = await res.json();
 		} catch (e) {
