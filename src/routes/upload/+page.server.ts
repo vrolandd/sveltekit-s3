@@ -22,22 +22,22 @@ export const actions: Actions = {
 		}
 
 		const {
-			AWS_ACCESS_KEY_ID,
-			AWS_SECRET_ACCESS_KEY,
-			AWS_REGION,
-			AWS_BUCKET_NAME,
+			S3_ACCESS_KEY_ID,
+			S3_SECRET_ACCESS_KEY,
+			S3_REGION,
+			S3_BUCKET_NAME,
 			CLOUDFRONT_URL
 		} = env;
 
-		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_REGION || !AWS_BUCKET_NAME) {
-			return fail(500, { error: 'S3 is not configured. Check AWS environment variables.' });
+		if (!S3_ACCESS_KEY_ID || !S3_SECRET_ACCESS_KEY || !S3_REGION || !S3_BUCKET_NAME) {
+			return fail(500, { error: 'S3 is not configured. Check S3 environment variables.' });
 		}
 
 		const s3 = new S3Client({
-			region: AWS_REGION,
+			region: S3_REGION,
 			credentials: {
-				accessKeyId: AWS_ACCESS_KEY_ID,
-				secretAccessKey: AWS_SECRET_ACCESS_KEY
+				accessKeyId: S3_ACCESS_KEY_ID,
+				secretAccessKey: S3_SECRET_ACCESS_KEY
 			}
 		});
 
@@ -47,7 +47,7 @@ export const actions: Actions = {
 		try {
 			await s3.send(
 				new PutObjectCommand({
-					Bucket: AWS_BUCKET_NAME,
+					Bucket: S3_BUCKET_NAME,
 					Key: key,
 					Body: buffer,
 					ContentType: file.type
@@ -61,7 +61,7 @@ export const actions: Actions = {
 
 		const base = CLOUDFRONT_URL
 			? CLOUDFRONT_URL.replace(/\/$/, '')
-			: `https://${AWS_BUCKET_NAME}.s3.${AWS_REGION}.amazonaws.com`;
+			: `https://${S3_BUCKET_NAME}.s3.${S3_REGION}.amazonaws.com`;
 		const s3_url = `${base}/${key}`;
 
 		await db.insert(galleryTable).values({
