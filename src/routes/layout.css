@@ -2,5 +2,5 @@
 
 html,
 body {
-	@apply flex h-full flex-col;
+	@apply flex h-full flex-col bg-gray-950 text-gray-100;
 }

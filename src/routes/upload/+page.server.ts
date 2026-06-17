@@ -14,12 +14,20 @@ export const actions: Actions = {
 		if (!title || typeof title !== 'string' || title.trim() === '') {
 			return fail(400, { error: 'Title is required.' });
 		}
+		if (title.trim().length > 100) {
+			return fail(400, { error: 'Title must be 100 characters or less.' });
+		}
 		if (!file || !(file instanceof File) || file.size === 0) {
 			return fail(400, { error: 'Please select an image file.' });
 		}
 
-		const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION, AWS_BUCKET_NAME, CLOUDFRONT_URL } =
-			env;
+		const {
+			AWS_ACCESS_KEY_ID,
+			AWS_SECRET_ACCESS_KEY,
+			AWS_REGION,
+			AWS_BUCKET_NAME,
+			CLOUDFRONT_URL
+		} = env;
 
 		if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_REGION || !AWS_BUCKET_NAME) {
 			return fail(500, { error: 'S3 is not configured. Check AWS environment variables.' });
